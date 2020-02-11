@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+
 const domServer = () =>
   import(/* webpackChunkName: "domServer" */ './dom-server')
+
 domServer()
   .then(exec => exec?.default)
   .then(exec => {
