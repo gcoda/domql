@@ -1,0 +1,22 @@
+query allLinks {
+  document {
+    title
+    selectAll(selector: "tr.athing") {
+      select(selector: ".storylink") {
+        text @trim @replace(search: "\\s+", replacement: "_", flags: "g")
+        href: attr(name: "href")
+      }
+      next {
+        score: select(selector: ".score") {
+          text @number
+        }
+        age: select(selector: ".age") {
+          text
+        }
+        comments: select(selector: ".subtext > a:last-of-type") {
+          text @number
+        }
+      }
+    }
+  }
+}
