@@ -31,5 +31,5 @@ type Document {
 type Query {
   select(selector: String): Node
   selectAll(selector: String): [Node!]
-  document(background: Boolean): Document
+  document(location: String): Document
 }

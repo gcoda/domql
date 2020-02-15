@@ -1,35 +1,31 @@
-// fetch('http://news.ycombinator.com').then(console.log)
-browser.runtime.onMessage.addListener(
-  async (
-    request: any,
-    sender: any
-    // sendResponse: (message: any) => void
-  ) => {
-    console.log({ request }, sender)
-    if (request.newBackgroundQuery) {
-      const newTab = await browser.tabs.create({
-        active: false,
-        url: 'https://google.com',
-      })
-      console.log({ newTab })
+// new WebSocket...
+browser.runtime.onMessage.addListener(async (request: any, sender: any) => {
+  if (request.backgroundQuery && request.location) {
+    const newTab = await browser.tabs.create({
+      active: false,
+      url: request.location,
+    })
+    const tabId = newTab.id
+    const windowId = newTab.windowId
 
-      browser.tabs.executeScript(newTab.id, {
-        file: 'js/content-script.js',
-        runAt: 'document_start',
-      })
-      setTimeout(async () => {
-        if (newTab.id) {
-          const test = browser.tabs
-            .sendMessage(newTab.id, {
-              query: `query test { __typename }`,
-            })
-            .then(console.log)
-            .catch(console.log)
-          //   console.log(test)
-        }
-      }, 1000)
-    }
+    return !tabId
+      ? { data: null, errors: [{ message: 'Error when creating new tab' }] }
+      : browser.tabs
+          .executeScript(tabId, {
+            file: 'js/content-script.js',
+            runAt: 'document_start',
+          })
+          .then(() =>
+            browser.tabs
+              .sendMessage(tabId, { ...request, tabId, windowId })
+              .then(result => ({ ...result, tabId, windowId }))
+              .catch(e => ({ data: null, errors: [{ message: e.message }] }))
+          )
+          .then(result => {
+            browser.tabs.remove(tabId)
+            return result
+          })
   }
-)
+})
 /*
  */

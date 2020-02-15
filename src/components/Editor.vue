@@ -25,7 +25,7 @@ const example = `query allLinks {
     text
   }
 }`
-import { sendToActiveTab } from './sendToTab'
+import { sendMessage } from './dispatchMessage'
 export default createComponent({
   name: 'Editor',
   props: {},
@@ -43,13 +43,15 @@ export default createComponent({
     }
 
     const execute = () => {
-      // browser.runtime.sendMessage({ newBackgroundQuery: '22' })
       const { source, errors } = autoSave()
       if (!errors) {
         query.value = source
-        sendToActiveTab({ query: source }).then(
-          result => (response.value = JSON.stringify(result, null, 2))
-        )
+        sendMessage({
+          query: source,
+          variables: {
+            // google: 'https://google.com',
+          },
+        }).then(result => (response.value = JSON.stringify(result, null, 2)))
       } else {
         response.value = JSON.stringify({ data: null, errors }, null, 2)
       }
