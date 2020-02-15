@@ -27,6 +27,12 @@ export default {
     Document: {
       title: ({ document }) => document.title,
       referrer: ({ document }) => document.referrer,
+      selectAll: (root: null | NodeInternal, { selector = 'div' }) => {
+        const parent = root?.node || document
+        return [...parent.querySelectorAll(selector)].map(node => ({
+          node,
+        }))
+      },
     },
     Query: {
       document: (_, __, { document }) => ({ document }),

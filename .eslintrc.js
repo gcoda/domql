@@ -19,6 +19,7 @@ module.exports = {
     browser: true,
     es6: true,
     commonjs: true,
+    webextensions: true,
   },
   parserOptions: {
     ecmaVersion: 2018,

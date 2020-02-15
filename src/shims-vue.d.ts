@@ -1,4 +1,5 @@
 declare module '*.vue' {
+  import 'web-ext-types'
   import Vue from 'vue'
   export default Vue
 }
