@@ -1,0 +1,34 @@
+fragment JustLink on Node {
+  link: select(selector: "a") {
+    href: attr(name: "href")
+    text
+  }
+}
+query some {
+  select(selector: "a") {
+    node
+    attr(name: "href")
+    classList
+    class: attr(name: "class")
+  }
+  home: select(selector: ".home") {
+    node
+    ...JustLink
+  }
+  nav: select(selector: "#nav") {
+    node
+    ...JustLink
+  }
+}
+
+# domServer(`
+query allLinks {
+  document {
+    title
+  }
+  links: selectAll(selector: "a") {
+    href: attr(name: "href")
+    text
+  }
+}
+# `).then(({data, errors})=>console.log(data))
