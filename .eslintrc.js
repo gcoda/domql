@@ -1,18 +1,27 @@
 module.exports = {
-  root: true,
-  env: {
-    node: true
-  },
-  'extends': [
-    'plugin:vue/essential',
-    'eslint:recommended',
-    '@vue/typescript/recommended'
+  parser: 'vue-eslint-parser',
+  plugins: [
+    '@typescript-eslint',
+    'prettier',
+    'graphql',
+    // 'jest'
   ],
-  parserOptions: {
-    ecmaVersion: 2020
+
+  extends: [
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:vue/essential',
+    '@vue/prettier',
+    '@vue/typescript',
+  ],
+
+  env: {
+    node: true,
+    browser: true,
+    es6: true,
+    commonjs: true,
   },
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  }
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
+  },
 }
