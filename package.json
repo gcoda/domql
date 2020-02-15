@@ -11,6 +11,7 @@
     "@vue/composition-api": "^0.3.4",
     "core-js": "^3.6.4",
     "graphql": "^14.6.0",
+    "graphql-directive": "^0.2.1",
     "graphql-tag": "^2.10.3",
     "graphql-tools": "^4.0.6",
     "vue": "^2.6.11",

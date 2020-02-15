@@ -1566,7 +1566,7 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apollo-link@^1.2.3:
+apollo-link@^1.2.1, apollo-link@^1.2.3:
   version "1.2.13"
   resolved "https://registry.npmjs.org/apollo-link/-/apollo-link-1.2.13.tgz#dff00fbf19dfcd90fddbc14b6a3f9a771acac6c4"
   integrity sha512-+iBMcYeevMm1JpYgwDEIDt/y0BB7VWyvlm/7x+TIPNLHCTCMgcEgDuW5kH86iQZWo0I7mNwQiTOz+/3ShPFmBw==
@@ -4151,6 +4151,13 @@ graphql-config@^2.0.1:
     lodash "^4.17.4"
     minimatch "^3.0.4"
 
+graphql-directive@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/graphql-directive/-/graphql-directive-0.2.1.tgz#a124ce420d34915a0e63ed19d80613d935a96302"
+  integrity sha512-YLOzmwa7OcuZEjnkTaJ3fDJucY2SUeiT+lmKRw2Gc13oKD7X6c9x1nicAOEIpazU0Wzc87ZpmF3tnETGD+fwAQ==
+  dependencies:
+    graphql-tools "^2.21.0"
+
 graphql-import@^0.7.1:
   version "0.7.1"
   resolved "https://registry.npmjs.org/graphql-import/-/graphql-import-0.7.1.tgz#4add8d91a5f752d764b0a4a7a461fcd93136f223"
@@ -4170,6 +4177,17 @@ graphql-tag@^2.10.3:
   version "2.10.3"
   resolved "https://registry.npmjs.org/graphql-tag/-/graphql-tag-2.10.3.tgz#ea1baba5eb8fc6339e4c4cf049dabe522b0edf03"
   integrity sha512-4FOv3ZKfA4WdOKJeHdz6B3F/vxBLSgmBcGeAFPf4n1F64ltJUvOOerNj0rsJxONQGdhUMynQIvd6LzB+1J5oKA==
+
+graphql-tools@^2.21.0:
+  version "2.24.0"
+  resolved "https://registry.npmjs.org/graphql-tools/-/graphql-tools-2.24.0.tgz#bbacaad03924012a0edb8735a5e65df5d5563675"
+  integrity sha512-Mz9I7jyizrd+RafC/5EogJKTVzBbIddDCrW0sP5QLmsVVM3ujfhqVYu2lEXOaJW8Sy18f3ZICHirmKcn6oMAcA==
+  dependencies:
+    apollo-link "^1.2.1"
+    apollo-utilities "^1.0.1"
+    deprecated-decorator "^0.1.6"
+    iterall "^1.1.3"
+    uuid "^3.1.0"
 
 graphql-tools@^4.0.6:
   version "4.0.6"

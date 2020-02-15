@@ -20,6 +20,14 @@ query some {
     ...JustLink
   }
 }
+query linkedIn {
+  document {
+    title
+  }
+  links: selectAll(selector: ".feed-shared-update-v2__description-wrapper ") {
+    text @trim
+  }
+}
 
 # domServer(`
 query allLinks {
