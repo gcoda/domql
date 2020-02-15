@@ -20,12 +20,39 @@ query some {
     ...JustLink
   }
 }
+
+query github {
+  document {
+    title
+    files: selectAll(selector: "tr.js-navigation-item") {
+      icon: select(selector: "svg") {
+        label: attr(name: "aria-label")
+      }
+      link: select(selector: "a.js-navigation-open") {
+        text @trim
+        href: attr(name: "href")
+          @replace(search: "(.*)", replacement: "https://github.com$1")
+      }
+    }
+  }
+}
+
 query linkedIn {
   document {
     title
   }
   links: selectAll(selector: ".feed-shared-update-v2__description-wrapper ") {
     text @trim
+  }
+}
+
+query newTab {
+  document(location: "https://news.ycombinator.com/news") {
+    title
+    links: selectAll(selector: "a") {
+      href: attr(name: "href")
+      text
+    }
   }
 }
 
