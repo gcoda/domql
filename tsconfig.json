@@ -10,11 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "webpack-env",
-      // "firefox-webext-browser",
-      "web-ext-types"
-    ],
+    "types": ["webpack-env", "web-ext-types"],
     "paths": {
       "@/*": ["src/*"]
     },
