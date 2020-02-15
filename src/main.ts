@@ -3,10 +3,14 @@ import App from './App.vue'
 import router from './router'
 
 const domServer = () =>
-  import(/* webpackChunkName: "domServer" */ './dom-server')
+  import(
+    /* webpackChunkName: "domServer" */
+    /* webpackMode: "eager" */
+    './graphql/exec'
+  )
 
 domServer()
-  .then(exec => exec?.default)
+  .then(exec => exec.default)
   .then(exec => {
     Object.assign(window, { domServer: exec })
   })

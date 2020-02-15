@@ -1,0 +1,23 @@
+scalar HTMLElement
+type Node {
+  node: HTMLElement
+  text: String
+  html: String
+  classList: [String]
+  attr(name: String!): String
+  select(selector: String): Node
+  selectAll(selector: String): [Node!]
+  click(selector: String): Document
+}
+type Document {
+  title: String
+  referrer: String
+  select(selector: String): Node
+  selectAll(selector: String): [Node!]
+}
+type Query {
+  select(selector: String): Node
+  selectAll(selector: String): [Node!]
+  click(selector: String): Document
+  document: Document
+}
