@@ -5,7 +5,7 @@
         spellcheck="false"
         class="query-area"
         v-model="query"
-        x_change="prettify"
+        @change="autoSave"
       ></textarea>
     </div>
     <div class="button button-exec" @click="execute">Execute</div>
@@ -25,63 +25,37 @@ const example = `query allLinks {
     text
   }
 }`
+import { sendToActiveTab } from './sendToTab'
 export default createComponent({
   name: 'Editor',
   props: {},
   setup() {
-    const query = ref(example)
+    const stored = localStorage.getItem('stored-query')
+    const query = ref(
+      typeof stored === 'string' && stored.length > 0 ? stored : example
+    )
     const response = ref('')
-    const prettify = () => {
-      const { source, error } = prettyPrint(query.value)
-      if (!error) {
+
+    const autoSave = () => {
+      const { source, errors } = prettyPrint(query.value)
+      if (!errors) localStorage.setItem('stored-query', source)
+      return { source, errors }
+    }
+
+    const execute = () => {
+      // browser.runtime.sendMessage({ newBackgroundQuery: '22' })
+      const { source, errors } = autoSave()
+      if (!errors) {
         query.value = source
+        sendToActiveTab({ query: source }).then(
+          result => (response.value = JSON.stringify(result, null, 2))
+        )
+      } else {
+        response.value = JSON.stringify({ data: null, errors }, null, 2)
       }
     }
-    const execute = () => {
-      browser.windows.getCurrent().then(currentWindow => {
-        browser.tabs
-          .query({ active: true, windowId: currentWindow.id })
-          .then(tab => {
-            try {
-              if (tab[0]?.id) {
-                prettify()
-                browser.tabs
-                  .sendMessage(tab[0].id, { query: query.value })
-                  .then(result => {
-                    console.log(result)
-                    response.value = JSON.stringify(result, null, 2)
-                  })
-              }
-            } catch (e) {
-              response.value = JSON.stringify(
-                { data: null, errors: [e.message] },
-                null,
-                2
-              )
-            }
-          })
-      })
-    }
-    return { execute, prettify, query, response }
+    return { execute, autoSave, query, response }
   },
-  /*
-  mounted() {
-    // browser.runtime.sendMessage({ empty: '2' })
-  },
-  methods: {
-    async post() {
-      prettyPrint(`query {__typename}`)
-
-      // browser.runtime.sendMessage({ hello: 'from popup' })
-      console.log('post')
-    },
-  },
-  computed: {
-    defaultText() {
-      return browser.i18n.getMessage('extName')
-    },
-  },
-  */
 })
 </script>
 
