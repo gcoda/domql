@@ -1,4 +1,11 @@
 scalar HTMLElement
+directive @trim on FIELD
+directive @number on FIELD
+directive @replace(
+  search: String
+  replacement: String = ""
+  flags: String = ""
+) on FIELD
 type Node {
   node: HTMLElement
   text: String

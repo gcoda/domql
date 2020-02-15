@@ -1,7 +1,12 @@
-import config from './dom-config'
 import { graphql } from 'graphql'
 import { makeExecutableSchema } from 'graphql-tools'
-const schema = makeExecutableSchema(config)
+import { addDirectiveResolveFunctionsToSchema } from 'graphql-directive'
+import directiveResolvers from './dom-directives'
+import config from './dom-config'
+
+const schema = makeExecutableSchema({ ...config })
+addDirectiveResolveFunctionsToSchema(schema, directiveResolvers)
+
 const domServer = (query: string, variables = {}) =>
   graphql({
     schema,
