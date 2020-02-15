@@ -3,8 +3,8 @@ import { parse } from 'graphql/language/parser'
 export const prettyPrint = (source: string) => {
   try {
     const printed = print(parse(source))
-    return { source: printed, error: null }
+    return { source: printed, errors: null }
   } catch (e) {
-    return { source, error: e.message }
+    return { source, errors: [{ message: e.message }] }
   }
 }
