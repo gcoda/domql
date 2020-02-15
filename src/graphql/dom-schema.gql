@@ -13,9 +13,15 @@ type Node {
   classList: [String]
   attr(name: String!): String
   select(selector: String): Node
+  parent: Node
+  attributes: AttributesMap
+  next: Node
   selectAll(selector: String): [Node!]
+  childNodes: [Node!]
   click(selector: String): Document
+  scrollIntoView: Document
 }
+scalar AttributesMap
 type Document {
   title: String
   referrer: String
@@ -25,6 +31,5 @@ type Document {
 type Query {
   select(selector: String): Node
   selectAll(selector: String): [Node!]
-  click(selector: String): Document
-  document: Document
+  document(background: Boolean): Document
 }
