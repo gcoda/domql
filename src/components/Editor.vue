@@ -49,9 +49,17 @@ export default createComponent({
         sendMessage({
           query: source,
           variables: {
-            // google: 'https://google.com',
+            google: 'https://google.com',
           },
-        }).then(result => (response.value = JSON.stringify(result, null, 2)))
+        })
+          .then(result => (response.value = JSON.stringify(result, null, 2)))
+          .catch(e => {
+            response.value = JSON.stringify(
+              { errors: [{ message: e.message }] },
+              null,
+              2
+            )
+          })
       } else {
         response.value = JSON.stringify({ data: null, errors }, null, 2)
       }
