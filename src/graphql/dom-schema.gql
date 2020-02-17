@@ -9,6 +9,7 @@ directive @replace(
 type Node {
   node: HTMLElement
   text: String
+  innerText: String
   html: String
   classList: [String]
   attr(name: String!): String
@@ -18,10 +19,13 @@ type Node {
   next: Node
   selectAll(selector: String): [Node!]
   childNodes: [Node!]
-  click(selector: String): Document
+  click(selector: String, waitForSelector: String): Node
+  root: Node
   scrollIntoView: Document
 }
+
 scalar AttributesMap
+
 type Document {
   title: String
   referrer: String
@@ -31,5 +35,5 @@ type Document {
 type Query {
   select(selector: String): Node
   selectAll(selector: String): [Node!]
-  document(location: String): Document
+  document(location: String, waitForSelector: String): Document
 }

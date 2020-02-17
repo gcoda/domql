@@ -8,6 +8,7 @@ export default {
       attr: (root: null | NodeInternal, { name = '' }) =>
         root?.node?.getAttribute(name),
       text: (root: null | NodeInternal) => root?.node?.textContent,
+      innerText: (root: null | NodeInternal) => root?.node?.innerText,
       html: (root: null | NodeInternal) => root?.node?.innerHTML,
       parent: ({ node }: NodeInternal) => ({ node: node?.parentElement }),
       next: (root: null | NodeInternal) => ({ node: root?.node?.nextSibling }),
@@ -19,8 +20,32 @@ export default {
             ),
       classList: (root: null | NodeInternal) =>
         root?.node?.getAttribute('class')?.split(' '),
+
+      click: async ({ node }: NodeInternal, { selector, waitForSelector }) => {
+        if (!selector || !node) return null
+        node.click()
+        if (waitForSelector) {
+          let interval: null | NodeJS.Timeout = null
+          let counter = 0
+          await new Promise(resolve => {
+            interval = setInterval(() => {
+              counter++
+              const el = node.parentElement?.querySelector(waitForSelector)
+              if (el || counter > 30) {
+                resolve()
+              }
+            }, 200)
+          })
+          if (interval) clearInterval(interval)
+        }
+        return {
+          node,
+        }
+      },
+
       select: ({ node }: NodeInternal, { selector }) =>
         !selector ? null : { node: node?.querySelector(selector) },
+
       selectAll: ({ node }: NodeInternal, { selector }) =>
         !selector || !node
           ? []
@@ -33,6 +58,7 @@ export default {
         node?.scrollIntoView()
         return { document }
       },
+      root: (_, __, { document }) => document,
     },
     Document: {
       title: ({ document }: DocumentInternal) => document?.title,
@@ -49,7 +75,23 @@ export default {
           : [...document.querySelectorAll(selector)].map(node => ({ node })),
     },
     Query: {
-      document: (_, __, { document }) => ({ document }),
+      document: async (_, { waitForSelector }, { document }) => {
+        if (waitForSelector) {
+          let interval: null | NodeJS.Timeout = null
+          let counter = 0
+          await new Promise(resolve => {
+            interval = setInterval(() => {
+              counter++
+              const el = document.querySelector(waitForSelector)
+              if (el || counter > 30) {
+                resolve()
+              }
+            }, 200)
+          })
+          if (interval) clearInterval(interval)
+        }
+        return { document }
+      },
       select: (root: null, { selector = 'body' }, context: any) => {
         return {
           node: document.querySelector(selector),
