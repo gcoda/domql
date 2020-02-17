@@ -4,7 +4,14 @@
   "homepage_url": "http://localhost:8080/",
   "description": "A Vue Browser Extension",
   "default_locale": "en",
-  "permissions": ["activeTab", "<all_urls>", "*://*/*"],
+  "permissions": [
+    "activeTab",
+    "<all_urls>",
+    "*://*/*",
+    "tabs",
+    "background",
+    "proxy"
+  ],
   "icons": {
     "16": "icons/16.png",
     "48": "icons/48.png",
