@@ -7,5 +7,6 @@ const domServerModule = () =>
 const domServer = (() => domServerModule().then(exec => exec.default))()
 browser.runtime.onMessage.addListener(async (message: any, sender: any) => {
   const dom = await domServer
-  return dom(message.query)
+  if (message.query) return dom(message.query, message.variables)
+  if (message.checkPresence) return true
 })
