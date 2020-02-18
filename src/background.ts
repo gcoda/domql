@@ -69,7 +69,6 @@ const makeRequest: MakeRequest = async request => {
   return tab
 }
 
-Object.assign(globalThis, { gql, makeRequest, setConcurrency })
 import { splitByDocumentField } from './graphql/splitDocuments'
 let requestCounter = 0
 const splitRequests = (request: any) => {
@@ -105,6 +104,8 @@ const splitRequests = (request: any) => {
 browser.runtime.onMessage.addListener((request: any, sender: any) => {
   return splitRequests(request)
 })
+
+Object.assign(globalThis, { gql, makeRequest: splitRequests, setConcurrency })
 
 type DomQlRequestOptions = {
   query?: string
