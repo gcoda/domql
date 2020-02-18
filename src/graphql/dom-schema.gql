@@ -1,4 +1,7 @@
 scalar HTMLElement
+scalar JSON
+scalar AttributesMap
+
 directive @trim on FIELD
 directive @number on FIELD
 directive @replace(
@@ -6,7 +9,46 @@ directive @replace(
   replacement: String = ""
   flags: String = ""
 ) on FIELD
+
+type Query {
+  echo(
+    json: JSON
+    array: [JSON]
+    parse: String
+    string: String
+    number: Float
+    boolean: Boolean
+  ): JSON
+  select(selector: String): Node
+  selectAll(selector: String): [Node!]
+  document(location: String, waitForSelector: String): Document
+}
+
+type Document {
+  echo(
+    json: JSON
+    array: [JSON]
+    parse: String
+    string: String
+    number: Float
+    boolean: Boolean
+  ): JSON
+  title: String
+  referrer: String
+  location: String
+  select(selector: String): Node
+  selectAll(selector: String): [Node!]
+}
+
 type Node {
+  echo(
+    json: JSON
+    array: [JSON]
+    parse: String
+    string: String
+    number: Float
+    boolean: Boolean
+  ): JSON
   node: HTMLElement
   text: String
   innerText: String
@@ -22,18 +64,4 @@ type Node {
   click(selector: String, waitForSelector: String): Node
   root: Node
   scrollIntoView: Document
-}
-
-scalar AttributesMap
-
-type Document {
-  title: String
-  referrer: String
-  select(selector: String): Node
-  selectAll(selector: String): [Node!]
-}
-type Query {
-  select(selector: String): Node
-  selectAll(selector: String): [Node!]
-  document(location: String, waitForSelector: String): Document
 }

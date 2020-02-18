@@ -1,17 +1,36 @@
 import typeDefs from './dom-schema.gql'
 const context = () => ({ document })
+const echo: FieldResolver = (_, attrs) => {
+  if (typeof attrs.parse === 'string') {
+    try {
+      return JSON.parse(`${attrs.parse}`)
+    } catch (e) {
+      return null
+    }
+  } else if (attrs.array && Array.isArray(attrs.array)) {
+    return attrs.array
+  } else if (attrs.json !== undefined) {
+    return attrs.json
+  } else if (attrs.string !== undefined) {
+    return attrs.string
+  } else if (attrs.boolean !== undefined) {
+    return attrs.boolean
+  }
+  return null
+}
 export default {
   context,
   typeDefs,
   resolvers: {
     Node: {
+      echo,
       attr: (root: null | NodeInternal, { name = '' }) =>
         root?.node?.getAttribute(name),
       text: (root: null | NodeInternal) => root?.node?.textContent,
       innerText: (root: null | NodeInternal) => root?.node?.innerText,
       html: (root: null | NodeInternal) => root?.node?.innerHTML,
       parent: ({ node }: NodeInternal) => ({ node: node?.parentElement }),
-      next: (root: null | NodeInternal) => ({ node: root?.node?.nextSibling }),
+      next: ({ node }: NodeInternal) => ({ node: node?.nextElementSibling }),
       attributes: ({ node }: NodeInternal) =>
         !node?.attributes
           ? null
@@ -61,6 +80,7 @@ export default {
       root: (_, __, { document }) => document,
     },
     Document: {
+      echo,
       title: ({ document }: DocumentInternal) => document?.title,
 
       select: ({ document }: DocumentInternal, { selector }) =>
@@ -68,13 +88,15 @@ export default {
           ? { node: document.querySelector(selector) }
           : null,
 
-      referrer: ({ document }) => document.referrer,
+      referrer: ({ document }: DocumentInternal) => document?.referrer,
+      location: ({ document }: DocumentInternal) => document?.location.href,
       selectAll: (_, { selector }, { document }) =>
         !selector
           ? []
           : [...document.querySelectorAll(selector)].map(node => ({ node })),
     },
     Query: {
+      echo,
       document: async (_, { waitForSelector }, { document }) => {
         if (waitForSelector) {
           let interval: null | NodeJS.Timeout = null
