@@ -1,6 +1,6 @@
 // new WebSocket...
 import PQueue from 'p-queue'
-let queue = new PQueue({ concurrency: 1 })
+const queue = new PQueue({ concurrency: 1 })
 
 const setConcurrency: SetConcurrency = concurrency => {
   queue.concurrency = concurrency
@@ -13,6 +13,15 @@ type TabMessage = {
   active?: boolean
   message: DomQlRequestOptions
 }
+const executeScript: browser.extensionTypes.InjectDetails = {
+  file: 'js/content-script.js',
+  runAt: 'document_start',
+  matchAboutBlank: true,
+}
+export type ArgType<F extends Function> = F extends (...args: infer A) => any
+  ? A[0]
+  : never
+
 const messageTab = async ({
   location,
   active = false,
@@ -27,11 +36,7 @@ const messageTab = async ({
       const exists = await browser.tabs
         .sendMessage(tab.id, { checkPresence: true })
         .catch(() => false)
-      if (!exists)
-        await browser.tabs.executeScript(tab.id, {
-          file: 'js/content-script.js',
-          runAt: 'document_start',
-        })
+      if (!exists) await browser.tabs.executeScript(tab.id, executeScript)
       const result = await browser.tabs
         .sendMessage(tab.id, message)
         .catch(e => ({ data: null, errors: [{ message: e.message }] }))
@@ -46,11 +51,7 @@ const messageTab = async ({
       const exists = await browser.tabs
         .sendMessage(tab.id, { checkPresence: true })
         .catch(() => false)
-      if (!exists)
-        await browser.tabs.executeScript(tab.id, {
-          file: 'js/content-script.js',
-          runAt: 'document_start',
-        })
+      if (!exists) await browser.tabs.executeScript(tab.id, executeScript)
       return browser.tabs
         .sendMessage(tab.id, message)
         .then((result: any) => ({
@@ -64,7 +65,7 @@ const messageTab = async ({
   }
   return { data: null, errors: [{ message: 'Tab not found' }] }
 }
-const makeRequest: MakeRequest = async request => {
+const singleRequest: MakeRequest = async request => {
   const tab = await messageTab({ location: request.location, message: request })
   return tab
 }
@@ -74,14 +75,13 @@ let requestCounter = 0
 const splitRequests = (request: any) => {
   requestCounter++
   const requests = splitByDocumentField(request)
-  return (
-    Promise
+  const response = Promise
     //
-      .all(
-        requests.map(r =>
-          queue.add(() => makeRequest(r), { priority: requestCounter })
-        )
+    .all(
+      requests.map(r =>
+        queue.add(() => singleRequest(r), { priority: requestCounter })
       )
+    )
     .then(r =>
       r.reduce(
         (a, c) => ({
@@ -93,12 +93,20 @@ const splitRequests = (request: any) => {
             ...(a?.errors ? a?.errors : []),
             ...(c?.errors ? c?.errors : []),
           ],
+          outputs: [
+            ...(a?.outputs ? a?.outputs : []),
+            ...(c?.outputs ? c?.outputs : []),
+          ],
         }),
-        { data: {}, errors: [] }
+        { data: {}, errors: [], outputs: [] }
       )
     )
-    .then(r => (r?.errors?.length ? r : { data: r?.data, errors: null }))
-  )
+    .then(r => ({
+      data: r?.data,
+      outputs: r?.outputs,
+      errors: r?.errors?.length ? r?.errors : null,
+    }))
+  return response
 }
 
 browser.runtime.onMessage.addListener(async (request: any, sender: any) => {
@@ -131,6 +139,7 @@ type DomQlRequestOptions = {
 type DomQlResponse = {
   data: any
   errors: null | Array<{ message: string }>
+  outputs?: null | Array<any>
   tabId?: number
   windowId?: number
 }
@@ -142,6 +151,7 @@ export type MakeRequest = (
 type ArgumentType<F extends Function> = F extends (...args: infer A) => any
   ? A[0]
   : never
+
 type Maybe<T> = null | undefined | T
 export type SetConcurrency = (concurrency: number) => void
 export type QueueOptions = ArgumentType<typeof PQueue>
