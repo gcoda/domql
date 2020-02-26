@@ -6,13 +6,14 @@ export const JsonRecords: JsonRecordsResolver = async records => {
     records,
   }
 }
-type UnPromisify<T> = T extends Promise<infer U> ? U : T
 
-type JsonRecordsGetResolver = GraphQLFieldResolver<
+type JsonRecordsFieldResolver = GraphQLFieldResolver<
   { records?: any },
   any,
   { name: string }
 >
-export const get: JsonRecordsGetResolver = async (source, { name }) => {
-  return source?.records?.[name]
-}
+export default {
+  get: async (source, { name }) => {
+    return source?.records?.[name]
+  },
+} as { [k: string]: JsonRecordsFieldResolver }

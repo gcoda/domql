@@ -5,7 +5,7 @@ import NodeResolvers from './Node/Node'
 
 import { QueryFetch } from './Fetch/QueryFetch'
 import * as FetchResponse from './Fetch/FetchResponse'
-import * as JsonRecords from './JsonRecords/JsonRecords'
+import JsonRecords from './JsonRecords/JsonRecords'
 
 const deferredResolver: Resolver = (fieldName, root, args, ctx, info) => {
   if (root?.__typename === 'FetchResponse') {
