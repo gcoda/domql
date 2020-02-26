@@ -2,6 +2,27 @@ import { DirectiveResolvers } from 'graphql-directive'
 type ReplaceArgs = { search: string; replacement?: string; flags?: string }
 
 export default {
+  output: async (
+    resolve,
+    _,
+    { name, data, includeResult, forEach },
+    { output }
+  ) => {
+    if (includeResult) {
+      const result = await resolve()
+      if (forEach && Array.isArray(result)) {
+        result.forEach(resolvedItem => {
+          output({ name, data: data, result: resolvedItem })
+        })
+      } else {
+        output({ name, data: data, result })
+      }
+      return result
+    } else {
+      output({ name, data: data })
+      return resolve()
+    }
+  },
   trim: async resolve => {
     const value = await resolve()
     return typeof value === 'string' ? value.trim() : value
