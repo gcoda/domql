@@ -1,0 +1,161 @@
+.CodeMirror-info {
+  position: absolute;
+}
+.CodeMirror {
+  height: auto;
+  font-family: 'PT Mono';
+  font-weight: 400 !important;
+  /* leading-snug tracking-tight */
+  @apply text-base;
+}
+.CodeMirror * {
+  font-weight: 400 !important;
+}
+.CodeMirror-jump-token {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.CodeMirror-hints {
+  /* @apply text-sm leading-snug tracking-tight; */
+  position: absolute;
+  font-family: 'PT Mono';
+  font-weight: 400 !important;
+}
+.CodeMirror-hint {
+  @apply my-1 text-base;
+}
+.CodeMirror-lint-tooltip {
+  font-family: 'PT Mono';
+  @apply text-base items-center shadow-lg rounded-lg border border-gray-500 bg-yellow-200 p-1;
+}
+
+.code-property {
+  @apply text-purple-1000;
+}
+.code-qualifier {
+  @apply text-purple-700;
+}
+.code-variable {
+  @apply text-red-1000;
+}
+.code-punctuation {
+  @apply text-gray-1000;
+}
+.code-operator {
+  @apply text-gray-1000;
+}
+.code-number {
+  @apply text-blue-1000;
+}
+.code-boolean {
+  @apply text-teal-1000;
+}
+.code-string {
+  @apply text-green-900;
+}
+.code-null-keyword {
+  @apply text-green-1000;
+}
+.code-keyword {
+  @apply text-green-1000;
+}
+.code-comment {
+  @apply text-teal-1000;
+}
+.code-meta {
+  @apply text-orange-1000;
+}
+.code-attribute {
+  @apply text-blue-1000;
+}
+.code-definition {
+  @apply text-pink-1000;
+}
+.cm-s-default {
+  & .cm-variable {
+    @apply code-variable;
+  }
+  & .cm-number {
+    @apply code-number;
+  }
+  & .cm-string {
+    @apply code-string;
+  }
+  & .cm-comment {
+    @apply code-comment;
+  }
+  & .cm-qualifier {
+    @apply code-qualifier;
+  }
+  & .cm-property {
+    @apply code-property;
+  }
+  & .cm-meta {
+    @apply code-meta;
+  }
+  & .cm-keyword {
+    @apply code-keyword;
+  }
+  & .cm-def {
+    @apply code-definition;
+  }
+  & .cm-attribute {
+    @apply code-attribute;
+  }
+}
+
+div.CodeMirror {
+  & span.CodeMirror-matchingbracket {
+    @apply text-purple-1000 bg-purple-100 rounded;
+  }
+  & .cm-punctuation {
+    @apply code-punctuation;
+  }
+}
+
+/* 
+PrismJs Colors 
+[...document.querySelectorAll('.token')]
+.map(e=>e.className)
+.map(c=>'.'+c.split(' ')
+.join('.'))
+.filter((e,i,a)=>i==a.indexOf(e))
+.map(t=>t+' {\n  \n}\n').join('')
+
+[...document.querySelectorAll('.token')]
+.map(e=>e.className)
+.map(c=>c.split(' ')
+.join('.'))
+.filter((e,i,a)=>i==a.indexOf(e))
+.map(s=>[s, s.replace('token','code').replace(/\./g,'-')])
+.map(([s,t])=>
+'.'+t+' {\n  @apply text-gray-1000;\n}\n' +
+'.'+s+' {\n  @apply '+t+';\n}\n'
+
+).join('')
+
+*/
+
+.token {
+  &.null.keyword {
+    @apply code-null-keyword;
+  }
+  &.string {
+    @apply code-string;
+  }
+  &.boolean {
+    @apply code-boolean;
+  }
+  &.number {
+    @apply code-number;
+  }
+  &.operator {
+    @apply code-operator;
+  }
+  &.punctuation {
+    @apply code-punctuation;
+  }
+  &.property {
+    @apply code-property;
+  }
+}
