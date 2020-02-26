@@ -105,7 +105,7 @@ type JsonRecords {
 }
 type FetchResponse {
   status: Int
-  statusTest: String
+  statusText: String
   url: String
   text: String
   json: JSON
