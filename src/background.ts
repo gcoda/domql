@@ -101,8 +101,22 @@ const splitRequests = (request: any) => {
   )
 }
 
-browser.runtime.onMessage.addListener((request: any, sender: any) => {
-  return splitRequests(request)
+browser.runtime.onMessage.addListener(async (request: any, sender: any) => {
+  if (request.query) return splitRequests(request)
+  else if (request.getAllTabs) {
+    const allTabs = await browser.tabs.query({})
+    const currentWindow = await browser.windows.getCurrent()
+    return allTabs.map(t => ({
+      id: t.id,
+      url: t.url,
+      active: t.active && currentWindow.id === t.windowId,
+      windowId: t.windowId,
+      status: t.status,
+      title: t.title,
+      lastAccessed: t.lastAccessed,
+      index: t.index,
+    }))
+  }
 })
 
 Object.assign(globalThis, { gql, makeRequest: splitRequests, setConcurrency })
