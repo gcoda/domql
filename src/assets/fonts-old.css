@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'PT Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/pt-mono-v7-latin_cyrillic-regular.eot');
+  src: local('PT Mono'), local('PTMono-Regular'),
+    url('./fonts/pt-mono-v7-latin_cyrillic-regular.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/pt-mono-v7-latin_cyrillic-regular.woff2') format('woff2'),
+    url('./fonts/pt-mono-v7-latin_cyrillic-regular.woff') format('woff'),
+    url('./fonts/pt-mono-v7-latin_cyrillic-regular.ttf') format('truetype'),
+    url('./fonts/pt-mono-v7-latin_cyrillic-regular.svg#PTMono') format('svg');
+}
