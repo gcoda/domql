@@ -1,4 +1,14 @@
+const webpack = require('webpack')
+const { VUE_APP_SERVE } = process.env
 module.exports = {
+  configureWebpack: {
+    plugins: [
+      new webpack.ContextReplacementPlugin(
+        /graphql-language-service-interface[\\/]dist$/,
+        new RegExp(`^\\./.*\\.js$`)
+      ),
+    ],
+  },
   chainWebpack: config => {
     // GraphQL Loader
     config.module
@@ -10,6 +20,17 @@ module.exports = {
   },
 
   pages: {
+    ...(VUE_APP_SERVE === 'web'
+      ? {
+          index: {
+            entry: 'src/main.ts',
+            template: 'public/index.html',
+            filename: 'index.html',
+            title: 'Index Page',
+            chunks: ['chunk-vendors', 'chunk-common', 'index'],
+          },
+        }
+      : {}),
     popup: {
       template: 'public/browser-extension.html',
       entry: './src/popup/main.ts',
