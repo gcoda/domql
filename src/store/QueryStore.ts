@@ -14,16 +14,16 @@ const HNExample = gql`
       # @replace(search: "\\D", flags: "g")
       @number(toFixed: 2)
   }
-  query allLinks {
+  query clickUpVote {
     document(
       waitForSelector: "body"
       location: "https://news.ycombinator.com"
     ) {
       title
-      article: selectAll(selector: "tr.athing", hasText: "Show") {
+      articles: selectAll(selector: "tr.athing", hasText: "Show HN") {
         select(s: ".votearrow") {
           parent {
-            click(waitForSelector: ".nosee") {
+            click(waitForSelector: ".nosee", wait: 0.2) {
               ok: echo(boolean: true)
             }
           }
