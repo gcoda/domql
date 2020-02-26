@@ -18,13 +18,8 @@ export default {
   },
   number: async (resolve, _, { toFixed = 0 }) => {
     const value = await resolve()
-    const number = toFixed
-      ? parseFloat(`${value}`).toFixed(toFixed)
-      : parseInt(`${value}`)
-    return typeof value === 'string'
-      ? `${number}`
-      : typeof value === 'number'
-      ? number
-      : number
+    const number = toFixed ? parseFloat(`${value}`) : parseInt(`${value}`)
+
+    return isNaN(number) ? null : number.toFixed(toFixed)
   },
 } as DirectiveResolvers
