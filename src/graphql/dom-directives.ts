@@ -1,6 +1,7 @@
 import { DirectiveResolvers } from 'graphql-directive'
-type ReplaceArgs = { search: string; replacement?: string; flags?: string }
-
+type ReplaceArgs = { search?: string; replacement?: string; flags?: string }
+import { validate } from './directives/validate'
+import { Context } from '@/graphql/context'
 export default {
   output: async (
     resolve,
@@ -43,4 +44,5 @@ export default {
 
     return isNaN(number) ? null : number.toFixed(toFixed)
   },
-} as DirectiveResolvers
+  validate,
+} as DirectiveResolvers<Context>
