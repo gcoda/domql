@@ -3,6 +3,7 @@ node_modules
 /dist
 _ignore
 /testFlow
+/cache
 # local env files
 .env.local
 .env.*.local
