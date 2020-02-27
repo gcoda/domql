@@ -5,7 +5,7 @@ type SelectFieldResolver = GraphQLFieldResolver<
 >
 const makeSelectResolver = (all: boolean): SelectFieldResolver => (
   source,
-  { selector = '*', hasText } = {}
+  { selector = '*', hasText, hasChildren } = {}
 ) => {
   const parent =
     source?.__typename === 'Node'
@@ -16,8 +16,11 @@ const makeSelectResolver = (all: boolean): SelectFieldResolver => (
 
   if (!parent || !(selector || hasText)) return null
   else if (selector) {
-    let nodes = all
-      ? [...parent.querySelectorAll(selector)].map(node => ({
+    let nodes: Array<{
+      __typename: 'Node'
+      node: HTMLElement
+    }> = all
+      ? ([...parent.querySelectorAll(selector)] as HTMLElement[]).map(node => ({
           __typename: 'Node',
           node,
         }))
@@ -27,7 +30,10 @@ const makeSelectResolver = (all: boolean): SelectFieldResolver => (
         })
 
     if (hasText) {
-      nodes = nodes.filter(node => node?.node?.textContent?.match(hasText))
+      nodes = nodes.filter(node => node?.node.innerText?.match(hasText))
+    }
+    if (hasChildren) {
+      nodes = nodes.filter(node => node?.node.querySelector(hasChildren))
     }
     return all ? nodes : nodes[0]
   }
