@@ -47,7 +47,7 @@ export default {
     return uniqSelectors
   },
   attr: (root, { name = '' }) => root?.node?.getAttribute(name),
-  text: root => {
+  textContent: root => {
     // console.log(root)
     return root?.node?.textContent
   },
