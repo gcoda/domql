@@ -1,12 +1,15 @@
-const domServerModule = () =>
-  import(
-    /* webpackChunkName: "domServer" */
-    /* webpackMode: "eager" */
-    '../graphql/dom-server'
-  )
-const domServer = (() => domServerModule().then(exec => exec.default))()
-browser.runtime.onMessage.addListener(async (message: any, sender: any) => {
-  const dom = await domServer
-  if (message.query) return dom(message.query, message.variables)
-  if (message.checkPresence) return true
-})
+import domServer from '../graphql/dom-server'
+
+if (browser.runtime) {
+  browser.runtime.onMessage.addListener((message: any, sender: any) => {
+    if (message.query) return domServer(message.query, message.variables)
+    if (message.checkPresence) return true
+  })
+} else if (window) {
+  const makeRequest = ({
+    query = '{__typename}',
+    variables = {},
+    outputs = [],
+  } = {}) => domServer(query, variables, outputs)
+  Object.assign(window, { makeRequest })
+}
