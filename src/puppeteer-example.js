@@ -1,5 +1,6 @@
 const path = require('path')
 const puppeteer = require('puppeteer-core')
+const fs = require('fs')
 
 const gql = String.raw
 const extensionPath = path.resolve(__dirname, '..', 'dist')
@@ -47,12 +48,13 @@ const browserQuery = async ({ concurrency = 3 } = {}) => {
       query: gql`
         query Puppeteer {
           document(location: "https://news.ycombinator.com") {
-            selectAll(selector: "tr.athing") {
-              select(selector: ".storylink") {
+            articles: selectAll(selector: "tr.athing")
+              @output(name: "article", includeResult: true, forEach: true) {
+              link: select(selector: ".storylink") {
                 innerText @trim
                 href: attr(name: "href")
               }
-              next {
+              info: next {
                 score: select(selector: ".score") {
                   innerText @number
                 }
@@ -69,7 +71,49 @@ const browserQuery = async ({ concurrency = 3 } = {}) => {
       `,
     }
   )
-  console.dir(result, { depth: 8 })
+
+  const articles = result.data.document.articles
+
+  // or use @output directive instead of data
+  // const articles = result.outputs
+
+  const contentQueries = articles
+    // ! limit
+    .slice(0, 15)
+    //
+    .map(article =>
+      page.evaluate(domQuery => makeRequest && makeRequest(domQuery), {
+        variables: {
+          location: article.link.href,
+          linkText: article.link.innerText,
+          info: article.info,
+        },
+        query: gql`
+          query MercuryParser(
+            $location: String
+            $info: JSON
+            $linkText: String
+          ) {
+            document(location: $location, waitForSelector: "body") {
+              linkLocation: echo(string: $location)
+              linkText: echo(string: $linkText)
+              info: echo(json: $info)
+              mercury(contentType: markdown) {
+                title
+                lead_image_url
+                content
+              }
+            }
+          }
+        `,
+      })
+    )
+  const content = await Promise.all(contentQueries)
+  fs.writeFileSync(
+    path.resolve(__dirname, 'puppeteer-example.json'),
+    JSON.stringify(content, null, 2)
+  )
+  console.dir(content, { depth: 8 })
   browser.close()
 }
-browserQuery()
+browserQuery({ concurrency: 3 })
