@@ -36,6 +36,7 @@ export const validate: DirectiveResolver = async (
   source,
   info
 ) => {
+  if (!args?.schema) return null
   const schema = convertProps(args.schema)
   schema.id = '/' + Math.random().toString()
 
@@ -49,7 +50,7 @@ export const validate: DirectiveResolver = async (
   return validateSchema(data, schema, {})
     .then(() => data)
     .catch(result => {
-      if (args.throw) {
+      if (args?.throw) {
         // const message = result?.errors?.[0]?.error || 'failed'
         const error = new Error(`@validate ${info?.fieldName}`)
         throw error
