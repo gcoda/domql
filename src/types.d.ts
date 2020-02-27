@@ -5,7 +5,7 @@ declare module 'graphql-directive' {
   export type DirectiveResolver<TContext = any, TArgs extends Args = Args> = (
     resolve: ResolveFn<any>,
     source: any,
-    directiveArgs: TArgs,
+    directiveArgs: null | TArgs,
     context: TContext,
     info?: GraphQLResolveInfo
   ) => Promise<any>

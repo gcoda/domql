@@ -3,12 +3,8 @@ type ReplaceArgs = { search?: string; replacement?: string; flags?: string }
 import { validate } from './directives/validate'
 import { Context } from '@/graphql/context'
 export default {
-  output: async (
-    resolve,
-    _,
-    { name, data, includeResult, forEach },
-    { output }
-  ) => {
+  output: async (resolve, _, args, { output }) => {
+    const { name, data, includeResult, forEach } = args || {}
     if (includeResult) {
       const result = await resolve()
       if (forEach && Array.isArray(result)) {
@@ -38,7 +34,8 @@ export default {
       ? value.replace(new RegExp(search, flags), replacement)
       : value
   },
-  number: async (resolve, _, { toFixed = 0 }) => {
+  number: async (resolve, _, args) => {
+    const { toFixed = 0 } = args || {}
     const value = await resolve()
     const number = toFixed ? parseFloat(`${value}`) : parseInt(`${value}`)
 
