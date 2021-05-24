@@ -21,7 +21,7 @@
     "@vue/composition-api": "^0.3.4",
     "ajv": "^6.11.0",
     "anyproxy": "^4.1.2",
-    "codemirror": "^5.51.0",
+    "codemirror": "^5.58.2",
     "codemirror-graphql": "^0.11.6",
     "core-js": "^3.6.4",
     "cross-fetch": "^3.0.4",
