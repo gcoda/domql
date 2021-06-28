@@ -42,7 +42,7 @@
     "p-queue": "^6.3.0",
     "pinia": "^0.0.5",
     "prettier": "^1.19.1",
-    "prismjs": "^1.19.0",
+    "prismjs": "^1.24.0",
     "puppeteer-core": "^2.1.1",
     "puppeteer-extra-plugin-adblocker": "^2.11.3",
     "throttle-debounce": "^2.1.0",
