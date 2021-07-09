@@ -35,7 +35,7 @@
     "http-proxy": "^1.18.0",
     "interface-datastore": "^0.8.1",
     "jsonschema-formatter": "^1.0.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "lru-cache": "^5.1.1",
     "mkdirp": "^1.0.3",
     "node-fetch": "^2.6.0",
